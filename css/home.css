@@ -1,0 +1,143 @@
+.hero {
+  padding-block: clamp(2.5rem, 6vw, var(--space-8)) var(--space-6);
+}
+
+/* The hero used to be big type floating over an empty page next to one lonely
+   bordered box. It's now one bordered sheet — a dossier page — with a hairline
+   divider between the text and the facts side, so nothing floats free. */
+.hero__sheet {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  border: var(--hairline) solid var(--color-line-strong);
+  border-radius: var(--radius);
+  background: var(--color-paper-raised);
+  box-shadow: inset 0 1px 0 var(--emboss-light), inset 0 -1px 0 var(--deboss-dark);
+  overflow: hidden;
+}
+.hero__text {
+  position: relative;
+  z-index: 0;
+  padding: var(--space-6) var(--space-5);
+  border-right: var(--hairline) solid var(--color-line-strong);
+  overflow: hidden;
+}
+
+/* Held-up-to-the-light watermark — sits behind the actual heading content
+   (negative z-index within .hero__text's own stacking context, established
+   by position:relative above) rather than floating on top of it. */
+.hero__watermark {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: clamp(9rem, 24vw, 17rem);
+  line-height: 1;
+  color: var(--color-ink);
+  opacity: 0.05;
+  pointer-events: none;
+  user-select: none;
+}
+.hero__name {
+  font-size: var(--size-hero);
+  letter-spacing: -0.02em;
+}
+.hero__tagline {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 600;
+  font-size: clamp(1.2rem, 1.3vw + 0.95rem, 1.55rem);
+  color: var(--color-ink);
+  margin-top: var(--space-3);
+  max-width: 34ch;
+}
+.hero__role {
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-ink-faint);
+  margin-top: var(--space-3);
+}
+.hero__cta {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.hero__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.hero__portrait img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius);
+  box-shadow: -4px -4px 10px rgba(255, 255, 255, 0.8),
+              4px 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Debossed UGA arch mark — deliberately NOT the blind (paper-colored,
+   invisible-except-shadow) treatment used elsewhere on the site. This one
+   carries real ink (a muted, faded color) so it reads as a stamped
+   impression rather than a hidden watermark. */
+.hero__uga-mark {
+  width: min(100%, 130px);
+}
+.hero__uga-mark svg {
+  width: 100%;
+  height: auto;
+  color: var(--color-ink-faint);
+  opacity: 0.7;
+  filter: drop-shadow(-0.5px -0.5px 0.5px rgba(255, 255, 255, 0.75))
+          drop-shadow(1px 1.5px 1px rgba(23, 21, 18, 0.3));
+}
+
+/* Nav-through — an asymmetric, edge-to-edge grid of bordered cells sharing
+   hairlines (a specimen board), not three even cards floating in a wide gap. */
+.nav-through__grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: var(--hairline) solid var(--color-line-strong);
+  border-left: var(--hairline) solid var(--color-line-strong);
+}
+.nav-through__cell {
+  border-right: var(--hairline) solid var(--color-line-strong);
+  border-bottom: var(--hairline) solid var(--color-line-strong);
+}
+.nav-through__cell--wide { grid-column: 1 / -1; }
+.nav-through__card {
+  display: block;
+  height: 100%;
+  padding: var(--space-5) var(--space-4);
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.nav-through__card:hover { background: var(--color-paper-raised); }
+.nav-through__card h2 { margin-top: var(--space-1); font-size: var(--size-h3); }
+.nav-through__cell--wide .nav-through__card h2 { font-size: var(--size-h2); }
+.nav-through__card p {
+  margin-top: var(--space-2);
+  font-size: var(--size-small);
+  max-width: 30ch;
+}
+.nav-through__cell--wide .nav-through__card p { max-width: 52ch; }
+
+@media (max-width: 800px) {
+  .hero__sheet { grid-template-columns: 1fr; }
+  .hero__text { border-right: none; border-bottom: var(--hairline) solid var(--color-line-strong); }
+  .nav-through__grid { grid-template-columns: 1fr; }
+  .nav-through__cell--wide { grid-column: 1; }
+}

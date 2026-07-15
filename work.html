@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work — Tanish Karnala</title>
+<meta name="description" content="Research, AI tools, and business/public-policy project work by Tanish Karnala.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Work — Tanish Karnala">
+<meta property="og:description" content="Research, AI tools, and business/public-policy project work.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/work.css">
+</head>
+<body>
+<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+  <filter id="paper-grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise" />
+    <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.07 0" in="noise" result="coloredNoise" />
+    <feBlend in="SourceGraphic" in2="coloredNoise" mode="multiply" />
+  </filter>
+</svg>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="page site-header__row">
+    <a class="wordmark" href="index.html" aria-label="Tanish Karnala — home">TK</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav">
+      <span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html" aria-current="page">Work</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="field-notes.html">Field Notes</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="stamp-container">
+<main id="main">
+  <section class="section page">
+    <span class="eyebrow">Work</span>
+    <h1>Research, builds, and everything between.</h1>
+    <p class="prose work-intro">
+      Everything below is tagged by track rather than split across pages, so the same
+      page works whether you're here for the technical work, the business side, or the
+      public-policy side. Filter to narrow it down.
+    </p>
+
+    <div class="filter-bar" data-filter-bar role="group" aria-label="Filter by track">
+      <button class="tag" data-filter="all" aria-pressed="true">All</button>
+      <button class="tag" data-filter="tech" data-track="tech" aria-pressed="false">Tech</button>
+      <button class="tag" data-filter="business" data-track="business" aria-pressed="false">Business</button>
+      <button class="tag" data-filter="policy" data-track="policy" aria-pressed="false">Public Policy</button>
+    </div>
+
+    <ul class="work-grid ledger-lines">
+
+      <li class="card card--flagship" data-track="tech">
+        <span class="tag" data-track="tech">Tech</span>
+        <span class="tag" data-track="policy">Public Policy</span>
+        <h3>Florida Medicaid &amp; Disability Benefits Guide</h3>
+        <p>Florida's disability benefits system runs through three agencies that rarely coordinate —
+        and the hardest gate, a federal disability redetermination at age 18, pushes more than half
+        of childhood SSI recipients off their benefits nationally, even when nothing about their
+        condition has changed. Built a bilingual (EN/ES) tool that reads an agency's actual DCF, APD,
+        or SSA notice, explains it in plain language, and walks a caregiver through the hardest
+        step: SSA's Adult Function Report, the form that decides most cases. Built during an internship
+        at Jupiter Gardens Primary Care.</p>
+        <div class="stat-row">
+          <span><b>55.7%</b> initially denied at 18</span>
+          <span><b>3</b> agencies reconciled</span>
+          <span><b>2</b> languages from day one</span>
+        </div>
+        <a class="card-link" href="demos/coverage-navigator.html" target="_blank" rel="noopener">View live demo →</a>
+      </li>
+
+      <li class="card" data-track="tech">
+        <span class="tag" data-track="tech">Tech</span>
+        <h3>Care Coordination Assistant</h3>
+        <p>Built for a small independent primary care practice whose older patients often see three
+        or four specialists at once. Reads a visit transcript, flags the referrals and specialist
+        updates a physician mentioned, drafts the outbound message, and tracks it through to sent —
+        nothing leaves the office without a person approving it first. Includes a letterhead-based
+        note generator for routine work/school excuse requests.</p>
+        <a class="card-link" href="demos/care-coordination-assistant.html" target="_blank" rel="noopener">View live demo →</a>
+      </li>
+
+      <li class="card" data-track="tech">
+        <span class="tag" data-track="tech">Tech</span>
+        <h3>Wildfire Predictive Modeling with Autonomous Drones</h3>
+        <p>Designed and built an autonomous drone using a TensorFlow/TF Lite CNN for real-time
+        wildfire image identification (98% accuracy) on a Raspberry Pi, plus a secondary model
+        forecasting regional wildfire risk from historical weather data (87% accuracy). Presented
+        the work as an independent TEDx talk, "How Autonomous Drones Can Save Lives."</p>
+        <div class="stat-row">
+          <span><b>98%</b> detection accuracy</span>
+          <span><b>87%</b> risk-forecast accuracy</span>
+        </div>
+        <a class="card-link card-link--github-icon" href="https://github.com/Neal-Kotval/fire_recognition" target="_blank" rel="noopener" aria-label="View the wildfire-drone source on GitHub">
+          <span class="gh-arrow" aria-hidden="true">&#8594;</span>
+          <svg class="gh-icon-lg" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </li>
+
+      <li class="card" data-track="tech">
+        <span class="tag" data-track="tech">Tech</span>
+        <h3>GTRI — Autonomous Drone Traffic Analysis</h3>
+        <p>Selected for Georgia Tech Research Institute's Electronic Systems Laboratory paid
+        research program (1.8% acceptance). Diagnosed and corrected a training-distribution mismatch
+        in YOLOv8 to adapt a real-time detection model for aerial traffic analysis — a lower-cost
+        alternative to fixed sensor infrastructure — then presented the cost case to GTRI faculty,
+        the Georgia Tech Board of Directors, and 150+ attendees.</p>
+        <a class="card-link card-link--github-icon" href="https://github.com/kjohnson136/trafficProject" target="_blank" rel="noopener" aria-label="View the GTRI traffic-analysis source on GitHub">
+          <span class="gh-arrow" aria-hidden="true">&#8594;</span>
+          <svg class="gh-icon-lg" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </li>
+
+      <li class="card" data-track="business">
+        <span class="tag" data-track="business">Business</span>
+        <h3>Red Ventures Sophomore Summit</h3>
+        <p>Selected as one of 35 sophomores nationally to attend a three-day, fully funded AI case
+        competition at Red Ventures' Charlotte headquarters. Pitched senior leadership on an
+        AI-integrated solution to address user decline on the Lonely Planet Travel App.</p>
+      </li>
+
+      <li class="card" data-track="business">
+        <span class="tag" data-track="business">Business</span>
+        <h3>VDart Consulting — Junior Project Manager Intern</h3>
+        <p>Managed a team of seven to launch an AI-powered HR service for Fortune 500 clients,
+        leading go-to-market strategy end to end. Directed competitor market research and pitched
+        the product to potential clients, shaping the pricing strategy.</p>
+      </li>
+
+      <li class="card" data-track="policy">
+        <span class="tag" data-track="policy">Public Policy</span>
+        <h3>Housing Affordability &amp; Economic Mobility</h3>
+        <p>Built a two-phase econometric model analyzing 60+ housing-market drivers across 63 public
+        datasets. Phase one: multivariate regression identifying rent, housing supply, and income as
+        the leading unaffordability predictors. Phase two: XGBoost/ARIMA time-series forecasting
+        projecting a 6% rise in unaffordability by 2030.</p>
+        <div class="stat-row">
+          <span><b>R² 0.78</b> regression fit</span>
+          <span><b>92%</b> forecast accuracy</span>
+        </div>
+      </li>
+
+      <li class="card" data-track="policy">
+        <span class="tag" data-track="policy">Public Policy</span>
+        <h3>Arch Policy Institute</h3>
+        <p>Contributing analyst at a non-partisan think tank addressing policy challenges in
+        Athens-Clarke County. Attended county commission meetings, summarized zoning mandates, and
+        used R to build data visualizations of zoning and housing trends for public policy briefs.</p>
+      </li>
+
+    </ul>
+  </section>
+</main>
+</div>
+
+<footer class="site-footer">
+  <div class="page site-footer__row">
+    <ul class="footer-links">
+      <li><a href="mailto:tanishkarnala@gmail.com">Email</a></li>
+      <li><a href="https://github.com/TODO-username" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://linkedin.com/in/tanishkarnala" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="field-notes.html#links">More links</a></li>
+    </ul>
+    <p class="footer-note">© 2026 Tanish Karnala</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/work-filter.js"></script>
+</body>
+</html>

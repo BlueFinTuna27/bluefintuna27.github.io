@@ -1,0 +1,91 @@
+.work-intro {
+  margin-top: var(--space-3);
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--hairline) solid var(--color-line);
+}
+.filter-bar .tag {
+  cursor: pointer;
+  border: var(--hairline) solid var(--color-line-strong);
+  background: transparent;
+  min-height: 32px;
+}
+.work-grid {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-5);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-3);
+}
+.work-grid .card h3 {
+  margin-top: var(--space-3);
+}
+.work-grid .card p {
+  margin-top: var(--space-2);
+  font-size: var(--size-small);
+}
+.card--flagship {
+  grid-column: 1 / -1;
+  background: var(--color-paper);
+  border-color: var(--color-ink);
+}
+.card--flagship .tag { margin-right: var(--space-1); }
+.card--flagship p { max-width: 68ch; }
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+  color: var(--color-ink-soft);
+}
+.stat-row b {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--accent-red);
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  text-decoration: none;
+  color: var(--color-ink-soft);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.card-link:hover { color: var(--accent-red); }
+
+/* Icon-only GitHub link — no visible URL, just a bigger centered mark with a
+   leading arrow, matching the same hover-to-red as every other card-link. */
+.card-link--github-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-4);
+}
+.gh-arrow {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.gh-icon-lg {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+

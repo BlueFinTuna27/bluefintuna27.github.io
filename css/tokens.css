@@ -1,0 +1,106 @@
+:root {
+  /* --- Color --- */
+  /* Subdued pastel turquoise page background, with an off-white paper color
+     for the stamp container and everything printed on it. */
+  --color-page-bg: #A0C4C0;
+  --color-paper: #F4F4F0;
+  --color-paper-raised: #F2F1EC;
+  --color-ink: #171512;
+  --color-ink-soft: #4C4438;
+  --color-ink-faint: #8A8071;
+  --color-line: rgba(23, 21, 18, 0.13);
+  --color-line-strong: rgba(23, 21, 18, 0.26);
+
+  /* Primary motif color — the one saturated accent, used sparingly and consistently */
+  --accent-red: #B3271D;
+  --accent-red-tint: #F3DEDA;
+
+  /* Letterpress emboss/deboss — a real directional light source (upper-left), used
+     on printed marks (index numbers, fact-row keys) and panel edges so they read as
+     pressed into or raised out of the paper, not just colored text with a faint shadow. */
+  --emboss-light: rgba(255, 255, 255, 0.85);
+  --emboss-dark: rgba(23, 21, 18, 0.38);
+  --deboss-light: rgba(255, 255, 255, 0.6);
+  --deboss-dark: rgba(23, 21, 18, 0.32);
+
+  /* Secondary, muted per-track colors — always applied to track tags/cards on the Work page */
+  --accent-tech: #93692F;      /* brass / ochre */
+  --accent-tech-tint: #EDE2CB;
+  --accent-business: #A8451F;  /* terracotta / rust */
+  --accent-business-tint: #F1DDCF;
+  --accent-policy: #33534E;    /* slate / teal */
+  --accent-policy-tint: #DCE6E3;
+
+  /* --- Type --- */
+  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+  --size-hero: clamp(2.75rem, 5vw + 1.5rem, 5.25rem);
+  --size-h1: clamp(2rem, 2.2vw + 1.3rem, 2.75rem);
+  --size-h2: clamp(1.375rem, 1.1vw + 1.1rem, 1.75rem);
+  --size-h3: clamp(1.125rem, 0.6vw + 1rem, 1.3125rem);
+  --size-body: 1.0625rem;
+  --size-small: 0.875rem;
+  --size-micro: 0.75rem;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+
+  /* --- Space (8px rhythm) --- */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.25rem;
+  --space-6: 3.5rem;
+  --space-7: 5.5rem;
+  --space-8: 8rem;
+
+  /* --- Layout --- */
+  --content-width: 46rem;
+  --page-width: 72rem;
+  --page-pad: clamp(1.25rem, 4vw, 3rem);
+
+  /* --- Motion (kept short and purposeful, honors reduced-motion) ---
+     ease-out: entrances/hover — starts fast, feels responsive (never ease-in: it delays
+     the exact moment being watched most). ease-standard: reserved for size/layout reveals
+     like the mobile nav accordion, where a symmetric curve reads more natural. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-press: 120ms;
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  /* --- Radius / line --- */
+  --radius: 3px;
+  --hairline: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #17140F;
+    --color-paper-raised: #201C15;
+    --color-ink: #F3EEE2;
+    --color-ink-soft: #C9C0AE;
+    --color-ink-faint: #837A69;
+    --color-line: rgba(243, 238, 226, 0.14);
+    --color-line-strong: rgba(243, 238, 226, 0.28);
+
+    --accent-red: #E2564A;
+    --accent-red-tint: rgba(226, 86, 74, 0.14);
+
+    --emboss-light: rgba(243, 238, 226, 0.22);
+    --emboss-dark: rgba(0, 0, 0, 0.7);
+    --deboss-light: rgba(243, 238, 226, 0.14);
+    --deboss-dark: rgba(0, 0, 0, 0.6);
+
+    --accent-tech: #D4A857;
+    --accent-tech-tint: rgba(212, 168, 87, 0.14);
+    --accent-business: #E07E52;
+    --accent-business-tint: rgba(224, 126, 82, 0.14);
+    --accent-policy: #7FADA5;
+    --accent-policy-tint: rgba(127, 173, 165, 0.14);
+  }
+}

@@ -1,0 +1,454 @@
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; }
+img, svg { display: block; max-width: 100%; }
+input, button, textarea { font: inherit; }
+p, h1, h2, h3, h4 { overflow-wrap: break-word; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Base ---------- */
+body {
+  background-color: var(--color-page-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fraunces-Variable.woff2 only covers weight 300–700 (see fonts.css) — 700 is
+   the heaviest this family goes, so headings top out there rather than
+   requesting a higher number that would silently clamp. */
+/* Debossed / letterpress: text sits just a shade darker than the paper it's
+   printed on, with a tight highlight-then-shadow pair standing in for a
+   stamped-in impression rather than ink sitting on top of the page. */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+  text-shadow:
+    -1px -1px 2px rgba(0, 0, 0, 0.15),
+    1px 1px 2px rgba(255, 255, 255, 0.9);
+}
+h1 { font-size: var(--size-h1); }
+h2 { font-size: var(--size-h2); }
+h3 { font-size: var(--size-h3); font-weight: 600; }
+
+p { color: var(--color-ink-soft); }
+p + p { margin-top: var(--space-3); }
+
+a {
+  color: inherit;
+  text-decoration-color: var(--color-line-strong);
+  text-underline-offset: 0.2em;
+  transition: color var(--duration-fast) var(--ease-out),
+              text-decoration-color var(--duration-fast) var(--ease-out);
+}
+a:hover { color: var(--accent-red); text-decoration-color: currentColor; }
+
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Ledger lines ---------- */
+/* Faint ruled-notebook-paper lines behind list content — visible in the
+   gaps between cards/notes, hidden wherever an opaque card sits on top. */
+.ledger-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 27px,
+    rgba(70, 100, 130, 0.16) 27px,
+    rgba(70, 100, 130, 0.16) 28px
+  );
+}
+
+/* ---------- Stamp frame / postmark ---------- */
+/* .stamp-frame is the positioning context for archival details (the postmark)
+   that need to bleed past the stamp edge onto the turquoise background —
+   they can't live inside .stamp-container itself, since its mask/filter
+   clips its whole rendered subtree at the container's own box. */
+.stamp-frame { position: relative; }
+.postmark {
+  position: absolute;
+  top: -34px;
+  right: 44px;
+  width: 130px;
+  height: 130px;
+  color: var(--accent-red);
+  opacity: 0.55;
+  transform: rotate(-9deg);
+  pointer-events: none;
+  z-index: 5;
+}
+.postmark svg { width: 100%; height: 100%; display: block; }
+
+@media (max-width: 700px) {
+  .postmark { width: 88px; height: 88px; top: -18px; right: 14px; }
+}
+
+/* ---------- Stamp container ---------- */
+/* The postage-stamp die-cut edge: a solid paper rectangle with a ring of
+   circular notches punched along all four sides. Built from a base fill mask
+   XORed with four repeating-circle masks, one per edge, each tiled along its
+   own edge only (repeat-x pinned top/bottom, repeat-y pinned left/right) —
+   a single gradient anchored at one corner can't reach all four sides. */
+.stamp-container {
+  --notch-r: 7px;
+  --notch-pitch: 18px;
+
+  background-color: var(--color-paper);
+  padding: 4rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+
+  /* Chromium's unprefixed mask-composite (luminance-mode "add"/"exclude")
+     doesn't punch the notches correctly in testing — the -webkit- alpha-based
+     compositing model is what actually produces a clean perforated edge, so
+     that's the one this relies on. N mask layers take N-1 composite operators
+     (they apply *between* each pair of layers, not to the base layer itself). */
+  -webkit-mask-image:
+    linear-gradient(#000, #000),
+    repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch)),
+    repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch)),
+    repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch)),
+    repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch));
+  -webkit-mask-repeat: no-repeat, repeat-x, repeat-x, repeat-y, repeat-y;
+  -webkit-mask-position: center, top center, bottom center, center left, center right;
+  -webkit-mask-size:
+    100% 100%,
+    var(--notch-pitch) var(--notch-pitch),
+    var(--notch-pitch) var(--notch-pitch),
+    var(--notch-pitch) var(--notch-pitch),
+    var(--notch-pitch) var(--notch-pitch);
+  -webkit-mask-composite: xor, xor, xor, xor;
+
+  /* Paper grain — SVG feTurbulence filter, defined inline in the page body. */
+  filter: url(#paper-grain);
+}
+
+@media (max-width: 700px) {
+  .stamp-container { padding: 2rem 1.25rem; }
+}
+
+/* ---------- Layout ---------- */
+.page {
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+.prose {
+  max-width: var(--content-width);
+}
+.section {
+  padding-block: var(--space-6);
+}
+.section--tight { padding-block: var(--space-4); }
+
+/* ---------- Skip link ---------- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: var(--space-2) var(--space-3);
+  z-index: 100;
+}
+.skip-link:focus { left: var(--space-3); top: var(--space-3); }
+
+/* ---------- Site header / nav ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(6px);
+  border-bottom: var(--hairline) solid var(--color-line);
+}
+.site-header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-3);
+  gap: var(--space-3);
+}
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-shadow:
+    -1px -1px 2px rgba(0, 0, 0, 0.15),
+    1px 1px 2px rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity var(--duration-fast) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
+}
+.wordmark:hover { opacity: 0.72; }
+.wordmark:active { transform: scale(0.94); }
+.site-nav { display: flex; }
+.site-nav ul {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+}
+.site-nav a {
+  display: inline-block;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink-soft);
+  border-bottom: 2px solid transparent;
+  transition: color var(--duration-fast) var(--ease-out),
+              border-bottom-color var(--duration-fast) var(--ease-out);
+}
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.nav-toggle { display: none; }
+
+@media (max-width: 640px) {
+  .site-header__row { flex-wrap: wrap; }
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: var(--hairline) solid var(--color-line-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: transform var(--duration-press) var(--ease-out);
+  }
+  .nav-toggle:active { transform: scale(0.94); }
+  .nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--color-ink);
+    position: relative;
+  }
+  .nav-toggle span::before, .nav-toggle span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: var(--color-ink);
+  }
+  .nav-toggle span::before { top: -6px; }
+  .nav-toggle span::after { top: 6px; }
+
+  .site-nav {
+    flex-basis: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--duration-base) var(--ease-standard);
+  }
+  .site-nav.is-open { max-height: 240px; }
+  .site-nav ul {
+    flex-direction: column;
+    gap: 0;
+    padding-block: var(--space-2) var(--space-3);
+    border-top: var(--hairline) solid var(--color-line);
+    margin-top: var(--space-2);
+  }
+  .site-nav a { min-height: 48px; }
+}
+
+/* ---------- Buttons / links-as-cta ---------- */
+/* Embossed: a raised paper cutout — soft light glow top-left, sharp dark
+   shadow bottom-right, like thick cardstock stacked on the page beneath it. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: 0.6em 1.1em;
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius);
+  color: var(--accent-red);
+  background-color: var(--color-paper);
+  box-shadow:
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    4px 4px 10px rgba(0, 0, 0, 0.08);
+  transition: color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
+}
+.btn:hover { color: var(--color-ink); }
+.btn:active {
+  transform: scale(0.97);
+  box-shadow:
+    -2px -2px 6px rgba(255, 255, 255, 0.6),
+    2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+.btn--quiet {
+  color: var(--color-ink-soft);
+}
+.btn--quiet:hover { color: var(--accent-red); }
+
+/* ---------- Cards ---------- */
+/* Embossed the same way as buttons — a thick paper cutout stacked on the
+   page, not a flat rectangle with a hairline drawn around it. */
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  background-color: var(--color-paper);
+  box-shadow:
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    4px 4px 10px rgba(0, 0, 0, 0.08);
+  transition: opacity var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-out);
+}
+.card.is-filtered-out {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-3);
+}
+
+/* ---------- Tag chips ---------- */
+/* Embossed, same paper-cutout treatment as buttons and cards. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding-inline: 0.7em;
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+  background-color: var(--color-paper);
+  box-shadow:
+    -4px -4px 10px rgba(255, 255, 255, 0.8),
+    4px 4px 10px rgba(0, 0, 0, 0.08);
+  transition: color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out),
+              transform var(--duration-press) var(--ease-out);
+}
+button.tag:active { transform: scale(0.96); }
+
+/* Per-track accent theming — always on */
+.tag[data-track="tech"] {
+  color: var(--accent-tech);
+  border-color: var(--accent-tech);
+  background: var(--accent-tech-tint);
+}
+.tag[data-track="business"] {
+  color: var(--accent-business);
+  border-color: var(--accent-business);
+  background: var(--accent-business-tint);
+}
+.tag[data-track="policy"] {
+  color: var(--accent-policy);
+  border-color: var(--accent-policy);
+  background: var(--accent-policy-tint);
+}
+.card[data-track="tech"] { border-left: 3px solid var(--accent-tech); }
+.card[data-track="business"] { border-left: 3px solid var(--accent-business); }
+.card[data-track="policy"] { border-left: 3px solid var(--accent-policy); }
+
+button.tag[aria-pressed="true"] {
+  color: var(--color-paper);
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: var(--hairline) solid var(--color-line);
+  padding-block: var(--space-5);
+  margin-top: var(--space-7);
+}
+.site-footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  list-style: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+}
+.footer-links a { text-decoration: none; color: var(--color-ink-soft); }
+.footer-note {
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  color: var(--color-ink-faint);
+}
+
+/* ---------- Utility ---------- */
+.eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--size-small);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-faint);
+  margin-bottom: var(--space-1);
+}
+
+/* Catalog-style roman-numeral index mark — the recurring device across the reference sites.
+   Stronger emboss than a link or a label: it should look stamped into the paper. */
+.index-mark {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--size-small);
+  letter-spacing: 0.04em;
+  color: var(--accent-red);
+  text-shadow: -0.5px -0.5px 0 var(--emboss-light), 0.5px 0.5px 1px var(--emboss-dark);
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
