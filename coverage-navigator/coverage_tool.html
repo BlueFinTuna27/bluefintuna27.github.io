@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coverage Navigator — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --paper-raised:#F5F8FA;
+    --ink:#1C2733;
+    --ink-soft:#5B6B78;
+    --brand:#1B3A5C;
+    --brand-dim:#DCE6EE;
+    --teal:#3E7C82;
+    --flag:#A6570F;
+    --flag-dim:#F3E4D2;
+    --ok:#3F7A56;
+    --ok-dim:#E1EBE4;
+    --hair:#D7DEE2;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Public Sans',sans-serif;font-size:15px;line-height:1.55;}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px 80px;}
+  .topbar-outer{background:var(--brand);padding:16px 24px;margin-bottom:36px;}
+  .topbar-inner{max-width:940px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+  .eyebrow{font-family:'Public Sans',sans-serif;font-weight:700;font-size:15px;letter-spacing:.01em;color:#fff;}
+  .langtoggle{display:flex;border:1px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden;}
+  .langtoggle button{
+    background:none;border:none;padding:6px 15px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+    letter-spacing:.05em;cursor:pointer;color:rgba(255,255,255,.8);
+  }
+  .langtoggle button.active{background:#fff;color:var(--brand);}
+
+  h1{font-family:'Public Sans',sans-serif;font-weight:700;font-size:clamp(22px,2.8vw,27px);line-height:1.25;margin:0 0 10px;letter-spacing:-.005em;color:var(--ink);}
+  .pagelabel{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;}
+  .lede{color:var(--ink-soft);max-width:60ch;margin:0 0 32px;font-size:16px;}
+
+  .tabs{display:flex;gap:22px;border-bottom:1px solid var(--hair);margin-bottom:28px;}
+  .tab{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+    padding:10px 2px;background:none;border:none;cursor:pointer;color:var(--ink-soft);
+    border-bottom:2px solid transparent;transform:translateY(1px);
+  }
+  .tab.active{color:var(--ink);border-bottom-color:var(--teal);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .card{background:var(--paper-raised);border:1px solid var(--hair);border-radius:var(--radius);padding:22px;margin-bottom:18px;}
+  .agency-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:20px;}
+  .agency-card{
+    background:var(--paper-raised);border:1px solid var(--hair);border-radius:var(--radius);
+    padding:18px;cursor:pointer;transition:border-color .15s;
+  }
+  .agency-card:hover{border-color:var(--teal);}
+  .agency-card.selected{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset;}
+  .agency-name{font-family:'Public Sans',sans-serif;font-size:16.5px;font-weight:700;margin-bottom:4px;}
+  .agency-sub{font-size:12.5px;color:var(--ink-soft);}
+
+  .detail{margin-top:8px;}
+  .detail h3{font-family:'Public Sans',sans-serif;font-size:18.5px;font-weight:700;margin:0 0 10px;color:var(--brand);}
+  .detail p{margin:0 0 12px;font-size:14.5px;}
+  .contact-row{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;background:var(--brand-dim);color:var(--brand);
+    border-radius:8px;padding:10px 14px;display:inline-block;margin-top:4px;
+  }
+  button.primary{
+    background:var(--brand);color:#fff;border:none;border-radius:8px;padding:11px 20px;
+    font-family:'Public Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;
+  }
+  button.primary:hover{background:#233a56;}
+  button.primary:disabled{background:#A9B4BE;cursor:wait;}
+  button.ghost{
+    background:none;border:1px solid var(--hair);color:var(--ink);border-radius:8px;
+    padding:8px 14px;font-family:'Public Sans',sans-serif;font-size:13px;cursor:pointer;
+  }
+  button.ghost:hover{border-color:var(--brand);color:var(--brand);}
+
+  label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;}
+  select, textarea{width:100%;font-family:'Public Sans',sans-serif;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--hair);border-radius:8px;padding:10px 12px;}
+  textarea{min-height:170px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.6;}
+  .field{margin-bottom:16px;}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:760px){.split{grid-template-columns:1fr;}}
+  .doc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;}
+  .original-box{background:#F1ECE2;border:1px dashed var(--hair);border-radius:8px;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;color:var(--ink-soft);}
+  .plain-box{background:var(--paper-raised);border:1px solid var(--ok);border-radius:8px;padding:18px;font-size:14.5px;line-height:1.65;white-space:pre-wrap;}
+  .callout{background:var(--flag-dim);color:var(--flag);border-radius:8px;padding:12px 14px;margin-top:12px;font-size:13.5px;}
+  .loading{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);}
+  .error{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A33;}
+  .note{font-size:12.5px;color:var(--ink-soft);border-top:1px solid var(--hair);padding-top:16px;margin-top:36px;}
+
+  .orient-caption{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;text-align:center;}
+  .orient-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px;}
+  .orient-item{text-align:center;padding:10px 8px;}
+  .orient-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+  .orient-icon svg{width:26px;height:26px;}
+  .orient-label{font-family:'Public Sans',sans-serif;font-weight:700;font-size:14.5px;margin-bottom:5px;}
+  .orient-trigger{font-size:12px;color:var(--ink-soft);line-height:1.4;}
+
+  .links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;}
+  .links-col h4{font-family:'Public Sans',sans-serif;font-size:14.5px;margin:0 0 8px;font-weight:700;color:var(--brand);}
+  .links-col a{display:block;font-size:13px;color:var(--brand);text-decoration:none;margin-bottom:7px;line-height:1.4;}
+  .links-col a:hover{text-decoration:underline;}
+
+  .checklist-box{background:var(--flag-dim);border-radius:8px;padding:16px 18px;margin-top:14px;}
+  .checklist-title{font-family:'Public Sans',sans-serif;font-weight:700;font-size:14px;color:var(--flag);margin-bottom:10px;}
+  .checklist-box ul{margin:0;padding-left:20px;}
+  .checklist-box li{font-size:13.5px;line-height:1.5;margin-bottom:8px;color:var(--ink);}
+  .checklist-box li:last-child{margin-bottom:0;}
+
+  .sequence-box{background:var(--brand-dim);border-radius:10px;padding:18px 20px;margin-bottom:22px;font-size:13.5px;line-height:1.6;}
+  .sequence-box b{color:var(--brand);}
+</style>
+</head>
+<body>
+<div class="topbar-outer">
+  <div class="topbar-inner">
+    <a href="index.html" class="eyebrow" id="eyebrowText" style="text-decoration:none;">Florida Medicaid &amp; Disability Benefits Guide</a>
+    <div class="langtoggle">
+      <button id="btnEN" class="active">EN</button>
+      <button id="btnES">ES</button>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+  <p class="pagelabel" id="pageLabelText">Guide · Understanding a notice</p>
+  <h1 id="titleText">A confusing letter,<br>explained plainly.</h1>
+  <p class="lede" id="ledeText">Florida disability benefits run through three different agencies that rarely talk to each other. Figure out which one sent your letter, and what it actually means.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="nav" id="tabNavLabel">What is this?</button>
+    <button class="tab" data-tab="tr" id="tabTrLabel">What does it mean?</button>
+  </div>
+
+  <!-- NAVIGATOR -->
+  <div class="panel active" id="panel-nav">
+    <p class="orient-caption" id="orientCaption"></p>
+    <div class="orient-row" id="orientRow">
+      <div class="orient-item">
+        <div class="orient-icon" style="background:var(--brand-dim);color:var(--brand);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3h9l3 3v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+            <path d="M9 12h6M9 15.5h6M9 8.5h3"/>
+          </svg>
+        </div>
+        <div class="orient-label">DCF</div>
+        <div class="orient-trigger" id="orientTriggerDcf"></div>
+      </div>
+      <div class="orient-item">
+        <div class="orient-icon" style="background:var(--ok-dim);color:var(--ok);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11.5 12 4l8 7.5"/>
+            <path d="M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9"/>
+            <path d="M9.5 21v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5"/>
+          </svg>
+        </div>
+        <div class="orient-label">APD</div>
+        <div class="orient-trigger" id="orientTriggerApd"></div>
+      </div>
+      <div class="orient-item">
+        <div class="orient-icon" style="background:var(--flag-dim);color:var(--flag);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="12" height="17" rx="1.5"/>
+            <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/>
+            <path d="M9 12.5l2 2 4-4.5"/>
+          </svg>
+        </div>
+        <div class="orient-label">SSA</div>
+        <div class="orient-trigger" id="orientTriggerSsa"></div>
+      </div>
+    </div>
+    <div class="sequence-box" id="sequenceBox"></div>
+    <div class="agency-grid" id="agencyGrid"></div>
+    <div class="card" id="agencyDetail" style="display:none;"></div>
+  </div>
+
+  <!-- TRANSLATOR -->
+  <div class="panel" id="panel-tr">
+    <div class="card">
+      <div class="field">
+        <label id="lblSample">Sample notice</label>
+        <select id="sampleSelect"></select>
+      </div>
+      <div class="split">
+        <div>
+          <div class="doc-label" id="lblOriginal">Original notice</div>
+          <textarea id="noticeBox"></textarea>
+        </div>
+        <div>
+          <div class="doc-label" id="lblPlain">In plain words</div>
+          <div id="plainOutput" class="plain-box" style="min-height:170px;"></div>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <button class="primary" id="explainBtn">Explain this notice</button>
+        <span id="trStatus" style="margin-left:12px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="linksCard">
+    <h3 id="linksTitle" style="font-family:'Public Sans',sans-serif;font-weight:700;font-size:18px;margin:0 0 16px;color:var(--brand);"></h3>
+    <div class="links-grid" id="linksGrid"></div>
+  </div>
+
+  <p class="note" id="footnoteText">Prototype — uses composite sample notices only, not real letters from any agency. Built to demonstrate the concept, not to replace legal or caseworker advice.</p>
+</div>
+
+<script>
+let currentLang = 'en';
+let currentSampleKey = 'dcf';
+let selectedAgency = null;
+
+const STRINGS = {
+  en: {
+    eyebrow: "Florida Medicaid & Disability Benefits Guide",
+    pageLabel: "Guide · Understanding a notice",
+    title: "A confusing letter,<br>explained plainly.",
+    lede: "Florida disability benefits run through three different agencies that rarely talk to each other. Figure out which one sent your letter, and what it actually means.",
+    tabNav: "What is this?", tabTr: "What does it mean?",
+    lblSample: "Sample notice", lblOriginal: "Original notice", lblPlain: "In plain words",
+    explainBtn: "Explain this notice", explaining: "Reading the notice…",
+    seeInTranslator: "See a sample of this letter →",
+    footnote: "Prototype — uses composite sample notices only, not real letters from any agency. Built to demonstrate the concept, not to replace legal or caseworker advice.",
+    noResult: "Could not read a clean result — try again.",
+    unreachable: "Live explanation isn't reachable from this environment. Showing a saved example instead.",
+    savedNote: "(saved example — live explanation runs inside Claude)",
+    orientCaption: "Your letter is from one of these three — look for these clues:",
+    orientDcf: "Mentions Medicaid renewal or your ACCESS account",
+    orientApd: "Mentions iBudget, a waiver, or a waitlist",
+    orientSsa: "Mentions an exam, turning 18, or a disability redetermination",
+    linksTitle: "Where to go for more help",
+    sequenceHtml: "<b>If this is about a young adult turning 18</b> who's never been able to work or live independently, here's roughly how the pieces usually fit together: <b>SSA's age-18 disability redetermination</b> tends to be the first and hardest gate — Medicaid coverage often follows automatically once SSA approves. <b>APD's iBudget waiver</b> is a separate application, for extra services on top of Medicaid, and commonly ends in a waitlist even once approved. If a parent is on Social Security disability, retirement, or has passed away, ask about <b>Disabled Adult Child benefits</b> too — a separate, often larger benefit most families never hear about."
+  },
+  es: {
+    eyebrow: "Guía de Medicaid y Beneficios por Discapacidad de Florida",
+    pageLabel: "Guía · Cómo entender un aviso",
+    title: "Una carta confusa,<br>explicada con claridad.",
+    lede: "Los beneficios por discapacidad en Florida pasan por tres agencias distintas que casi nunca se comunican entre sí. Averigüe cuál le envió la carta, y qué significa realmente.",
+    tabNav: "¿Qué es esto?", tabTr: "¿Qué significa?",
+    lblSample: "Carta de ejemplo", lblOriginal: "Carta original", lblPlain: "En palabras sencillas",
+    explainBtn: "Explicar esta carta", explaining: "Leyendo la carta…",
+    seeInTranslator: "Ver un ejemplo de esta carta →",
+    footnote: "Prototipo — usa cartas de ejemplo compuestas, no cartas reales de ninguna agencia. Hecho para demostrar el concepto, no para reemplazar asesoría legal o de un trabajador de casos.",
+    noResult: "No se pudo leer un resultado claro — intente de nuevo.",
+    unreachable: "La explicación en vivo no está disponible en este entorno. Mostrando un ejemplo guardado.",
+    savedNote: "(ejemplo guardado — la explicación en vivo funciona dentro de Claude)",
+    orientCaption: "Su carta es de una de estas tres — busque estas pistas:",
+    orientDcf: "Menciona renovación de Medicaid o su cuenta ACCESS",
+    orientApd: "Menciona iBudget, una exención, o lista de espera",
+    orientSsa: "Menciona un examen, cumplir 18 años, o una redeterminación de discapacidad",
+    linksTitle: "Dónde obtener más ayuda",
+    sequenceHtml: "<b>Si esto trata de un joven adulto que cumple 18 años</b> y nunca ha podido trabajar o vivir de forma independiente, así es más o menos cómo encajan las piezas: la <b>redeterminación de discapacidad de los 18 años de SSA</b> tiende a ser el obstáculo primero y más difícil — la cobertura de Medicaid a menudo sigue automáticamente una vez que SSA aprueba. La <b>exención iBudget de APD</b> es una solicitud separada, para servicios adicionales además de Medicaid, y comúnmente termina en una lista de espera incluso después de ser aprobada. Si uno de los padres recibe discapacidad o jubilación del Seguro Social, o ha fallecido, pregunte también sobre los <b>beneficios de Hijo Adulto Discapacitado</b> — un beneficio separado, a menudo mayor, del que muchas familias nunca se enteran."
+  }
+};
+
+const LINKS = {
+  dcf: [
+    { en: "Florida Medicaid (DCF)", es: "Medicaid de Florida (DCF)", url: "https://www.myflfamilies.com/medicaid" },
+    { en: "MyACCESS account portal", es: "Portal de cuenta MyACCESS", url: "https://www.myflfamilies.com/myaccess" },
+    { en: "Florida Health Justice Project — disability & Medicaid FAQ", es: "Florida Health Justice Project — preguntas sobre discapacidad y Medicaid", url: "https://floridahealthjustice.org/publications/what-if-my-dcf-notice-says-my-medicaid-is-ending-but-i-am-disabled/" }
+  ],
+  apd: [
+    { en: "Agency for Persons with Disabilities (APD)", es: "Agencia para Personas con Discapacidades (APD)", url: "https://apd.myflorida.com/" },
+    { en: "Florida Navigator — find state disability services", es: "Florida Navigator — buscar servicios estatales", url: "https://navigator.apd.myflorida.com/" },
+    { en: "Disability Rights Florida", es: "Disability Rights Florida", url: "https://disabilityrightsflorida.org/" }
+  ],
+  ssa: [
+    { en: "Social Security disability benefits", es: "Beneficios por discapacidad del Seguro Social", url: "https://www.ssa.gov/benefits/disability/" },
+    { en: "Supplemental Security Income (SSI)", es: "Seguridad de Ingreso Suplementario (SSI)", url: "https://www.ssa.gov/ssi/" },
+    { en: "About consultative examinations", es: "Sobre los exámenes consultivos", url: "https://www.ssa.gov/disabilityresearch/ce.htm" },
+    { en: "Benefits for children with disabilities (incl. Disabled Adult Child)", es: "Beneficios para niños con discapacidades (incl. Hijo Adulto Discapacitado)", url: "https://www.ssa.gov/pubs/EN-05-10026.pdf" },
+    { en: "Florida Vocational Rehabilitation (Employment Help)", es: "Rehabilitación Vocacional de Florida (Ayuda de Empleo)", url: "https://www.rehabworks.org/" }
+  ]
+};
+
+const AGENCY_INFO = {
+  dcf: {
+    en: {
+      name: "DCF — Medicaid Renewal", sub: "State agency · handles Medicaid eligibility",
+      body: "The Department of Children and Families decides who qualifies for Florida Medicaid and runs the annual renewal. If a letter mentions Medicaid ending, a renewal form, or your ACCESS account, it's from DCF.\n\nIf you believe there's a qualifying disability involved, you can submit disability documentation and, importantly, file an appeal before the date on the notice — doing so keeps coverage active until a decision is made. You can still appeal up to 90 days after the end date, but coverage won't continue in the meantime.",
+      contact: "Medicaid Helpline: 1-877-254-1055 · MyACCESS: myflfamilies.com/myaccess"
+    },
+    es: {
+      name: "DCF — Renovación de Medicaid", sub: "Agencia estatal · maneja elegibilidad de Medicaid",
+      body: "El Departamento de Niños y Familias decide quién califica para Medicaid en Florida y lleva a cabo la renovación anual. Si una carta menciona que Medicaid está terminando, un formulario de renovación, o su cuenta de ACCESS, es de DCF.\n\nSi cree que hay una discapacidad calificada involucrada, puede enviar documentación de discapacidad y, más importante, presentar una apelación antes de la fecha indicada en la notificación — esto mantiene la cobertura activa hasta que se tome una decisión. Aún puede apelar hasta 90 días después de la fecha final, pero la cobertura no continuará mientras tanto.",
+      contact: "Línea de Medicaid: 1-877-254-1055 · MyACCESS: myflfamilies.com/myaccess"
+    }
+  },
+  apd: {
+    en: {
+      name: "APD — iBudget Waiver", sub: "State agency · developmental disability services",
+      body: "The Agency for Persons with Disabilities is separate from Medicaid — it runs the iBudget waiver (extra services like therapy, residential support) for people with one of seven qualifying developmental disabilities, including autism. If a letter mentions iBudget, a waitlist category, or a QSI assessment, it's from APD, not DCF.\n\nAPD often requires updated proof of disability (school records, testing, medical records) — if you don't already have documentation, APD is required to help you get an evaluation at no cost.",
+      contact: "APD: 1-866-APD-CARES (1-866-273-2273)"
+    },
+    es: {
+      name: "APD — Exención iBudget", sub: "Agencia estatal · servicios de discapacidad del desarrollo",
+      body: "La Agencia para Personas con Discapacidades es diferente de Medicaid — administra la exención iBudget (servicios adicionales como terapia y apoyo residencial) para personas con una de siete discapacidades del desarrollo calificadas, incluyendo el autismo. Si una carta menciona iBudget, una categoría de lista de espera, o una evaluación QSI, es de APD, no de DCF.\n\nAPD frecuentemente requiere prueba actualizada de discapacidad (registros escolares, pruebas, registros médicos) — si no tiene documentación, APD está obligada a ayudarle a obtener una evaluación sin costo.",
+      contact: "APD: 1-866-APD-CARES (1-866-273-2273)"
+    }
+  },
+  ssa: {
+    en: {
+      name: "SSA — Disability Review", sub: "Federal agency · confirms ongoing disability status",
+      body: "If this is about a young person turning 18, this is very likely the age-18 redetermination — not a routine check-in. SSA re-evaluates the case as a brand-new adult disability claim, and does not need to show any improvement to end benefits; it just has to find the adult standard isn't met. SSA's own most recent published figure is that 55.7% of childhood SSI recipients are initially found ineligible at this step — it is genuinely the hardest gate, not a sign anything was done wrong.\n\nWorth knowing: if a parent is on Social Security disability or retirement, or has passed away, the young adult may also qualify for Disabled Adult Child (DAC) benefits on the parent's record instead of (or alongside) SSI — often a larger payment, with no income/asset test. Many families never hear about this option.\n\nIf a Consultative Examination is scheduled (an exam with an independent doctor, paid for by SSA), attending is mandatory — missing it without a good explanation can be treated as non-cooperation. You're allowed to bring a caregiver or authorized representative.\n\nImportant note on employment: If the young adult works a part-time job (like at Publix or through Florida Vocational Rehabilitation), it does not automatically disqualify them. The SSA is looking at \"Substantial Gainful Activity\" (SGA). Working 12 hours a week with a job coach is not the same as full, independent employment. Be sure to clearly document any special accommodations, job coaches, or extra supervision they require to keep that job.",
+      contact: "Social Security: 1-800-772-1213",
+      checklistTitle: "How to answer the SSA Adult Function Report — the part that decides most cases",
+      checklist: [
+        "Describe a bad day, not a good day. The form asks how the person functions — answers should reflect typical or worse days, not their best moments.",
+        "Be specific, not general. \"Can't cook\" is weak. \"Can microwave a frozen meal but can't safely use a stove unsupervised\" is what actually gets read.",
+        "Don't leave anything blank. If something doesn't apply, say so directly rather than skipping it.",
+        "Keep it consistent with medical records. Reviewers look for whether the described limitations match the diagnosis on file.",
+        "A caregiver can help write or explain the questions — but the answers have to reflect the person's own experience, not the caregiver's assessment swapped in.",
+        "Ask the doctor for a supporting letter describing functional limitations in plain terms, not just the diagnosis.",
+        "If they work part-time, clearly state their accommodations. Earning some money with the help of a Vocational Rehab job coach does not mean they can live independently or work full-time. Describe the extra help they get at work."
+      ]
+    },
+    es: {
+      name: "SSA — Revisión de Discapacidad", sub: "Agencia federal · confirma el estado continuo de discapacidad",
+      body: "Si esto trata de un joven que cumple 18 años, es muy probable que sea la redeterminación de los 18 años — no una revisión de rutina. SSA reevalúa el caso como una reclamación de discapacidad de adulto completamente nueva, y no necesita demostrar ninguna mejoría para terminar los beneficios; solo tiene que determinar que no se cumple el estándar de adulto. La cifra más reciente publicada por SSA es que el 55.7% de los beneficiarios de SSI infantil son inicialmente encontrados no elegibles en este paso — es realmente el obstáculo más difícil, no una señal de que algo se hizo mal.\n\nVale la pena saber: si uno de los padres recibe discapacidad o jubilación del Seguro Social, o ha fallecido, el joven adulto también puede calificar para beneficios de Hijo Adulto Discapacitado (DAC) basados en el registro del padre en lugar de (o junto con) SSI — a menudo un pago mayor, sin límite de ingresos o recursos. Muchas familias nunca se enteran de esta opción.\n\nSi se programa un Examen Consultivo (un examen con un médico independiente, pagado por SSA), asistir es obligatorio — faltar sin una buena explicación puede tratarse como falta de cooperación. Puede llevar consigo a un cuidador o representante autorizado.\n\nNota importante sobre el empleo: Si el joven adulto tiene un trabajo a tiempo parcial (como en Publix o a través de Rehabilitación Vocacional de Florida), esto no lo descalifica automáticamente. La SSA evalúa la \"Actividad Lucrativa Sustancial\" (SGA). Trabajar 12 horas a la semana con un entrenador laboral no es lo mismo que un empleo completo e independiente. Asegúrese de documentar claramente cualquier adaptación especial, entrenadores laborales, o supervisión adicional que requieran para mantener ese trabajo.",
+      contact: "Seguro Social: 1-800-772-1213",
+      checklistTitle: "Cómo responder el Informe de Funcionamiento de Adulto de SSA — la parte que decide la mayoría de los casos",
+      checklist: [
+        "Describa un mal día, no un buen día. El formulario pregunta cómo funciona la persona — las respuestas deben reflejar días típicos o peores, no sus mejores momentos.",
+        "Sea específico, no general. \"No puede cocinar\" es débil. \"Puede usar el microondas pero no puede usar la estufa sin supervisión\" es lo que realmente se toma en cuenta.",
+        "No deje nada en blanco. Si algo no aplica, dígalo directamente en vez de omitirlo.",
+        "Manténgalo consistente con los registros médicos. Los revisores buscan si las limitaciones descritas coinciden con el diagnóstico en el expediente.",
+        "Un cuidador puede ayudar a escribir o explicar las preguntas — pero las respuestas deben reflejar la experiencia de la persona misma, no la evaluación del cuidador sustituida.",
+        "Pida al médico una carta de apoyo que describa las limitaciones funcionales en términos sencillos, no solo el diagnóstico.",
+        "Si trabajan a tiempo parcial, indique claramente sus adaptaciones. Ganar algo de dinero con la ayuda de un entrenador de Rehabilitación Vocacional no significa que puedan vivir de forma independiente o trabajar a tiempo completo. Describa la ayuda adicional que reciben en el trabajo."
+      ]
+    }
+  }
+};
+
+const SAMPLES = {
+  dcf: {
+    en: `STATE OF FLORIDA -- DEPARTMENT OF CHILDREN AND FAMILIES
+NOTICE OF PLANNED ACTION -- MEDICAID
+
+Case Number: 40-8827193
+Recipient: [Name]
+
+Your Medicaid coverage is scheduled to END on 08/15/2026 for the following reason:
+We were unable to confirm your continued eligibility using the information available to us.
+
+If you disagree with this decision, or believe a qualifying disability applies to this case, you must respond by 08/01/2026 with ONE of the following:
+- Updated income and household information, OR
+- Documentation of a qualifying disability (medical records, a Social Security disability award letter, or other proof)
+
+If you do not respond by the date above, your Medicaid coverage will end on the date listed. You have the right to request a fair hearing. If your hearing request is received before the end date above, your coverage will continue until a decision is made.
+
+Questions? Call the ACCESS Customer Call Center at 1-866-762-2237.`,
+    es: `ESTADO DE LA FLORIDA -- DEPARTAMENTO DE NIÑOS Y FAMILIAS
+NOTIFICACIÓN DE ACCIÓN PLANEADA -- MEDICAID
+
+Número de Caso: 40-8827193
+Destinatario: [Nombre]
+
+Su cobertura de Medicaid está programada para TERMINAR el 15/08/2026 por la siguiente razón:
+No pudimos confirmar su elegibilidad continua con la información disponible.
+
+Si no está de acuerdo con esta decisión, o cree que aplica una discapacidad calificada en este caso, debe responder antes del 01/08/2026 con UNO de los siguientes:
+- Información actualizada de ingresos y del hogar, O
+- Documentación de una discapacidad calificada (registros médicos, una carta de adjudicación de discapacidad del Seguro Social, u otra prueba)
+
+Si no responde antes de la fecha indicada, su cobertura de Medicaid terminará en la fecha señalada. Tiene derecho a solicitar una audiencia imparcial. Si su solicitud de audiencia se recibe antes de la fecha de finalización, su cobertura continuará hasta que se tome una decisión.
+
+¿Preguntas? Llame al Centro de Servicio al Cliente de ACCESS al 1-866-762-2237.`
+  },
+  apd: {
+    en: `AGENCY FOR PERSONS WITH DISABILITIES
+Central Region Office
+
+RE: iBudget Waiver -- Request for Updated Documentation
+
+Dear Waiver Support Coordinator / Family,
+
+Our records indicate that the documentation supporting the above client's developmental disability determination was last updated more than five (5) years ago. To maintain current eligibility status and iBudget waiver enrollment, please submit ONE of the following within 45 days of this notice:
+
+- Updated psychological or medical evaluation confirming the qualifying diagnosis, OR
+- School records or prior testing on file with APD, resubmitted for confirmation
+
+If documentation is not received within 45 days, the client's case may be referred for an eligibility re-review, which could affect continued waiver services.
+
+If you do not have current documentation, APD can assist in arranging a no-cost evaluation -- contact your regional office to request this.
+
+Questions? Call APD Central Region at (407) 245-0440.`,
+    es: `AGENCIA PARA PERSONAS CON DISCAPACIDADES
+Oficina de la Región Central
+
+RE: Exención iBudget -- Solicitud de Documentación Actualizada
+
+Estimado Coordinador de Apoyo de Exención / Familia,
+
+Nuestros registros indican que la documentación que respalda la determinación de discapacidad del desarrollo del cliente mencionado se actualizó por última vez hace más de cinco (5) años. Para mantener el estado de elegibilidad actual y la inscripción en la exención iBudget, envíe UNO de los siguientes documentos dentro de 45 días a partir de esta notificación:
+
+- Evaluación psicológica o médica actualizada que confirme el diagnóstico calificado, O
+- Registros escolares o pruebas previas en el archivo de APD, reenviados para confirmación
+
+Si no se recibe documentación dentro de 45 días, el caso del cliente puede ser referido para una nueva revisión de elegibilidad, lo cual podría afectar los servicios continuos de la exención.
+
+Si no tiene documentación actual, APD puede ayudar a organizar una evaluación sin costo -- contacte a su oficina regional para solicitarla.
+
+¿Preguntas? Llame a APD Región Central al (407) 245-0440.`
+  },
+  ssa: {
+    en: `SOCIAL SECURITY ADMINISTRATION
+Disability Determination Services
+
+NOTICE OF AGE-18 DISABILITY REDETERMINATION
+
+Our records show you will turn (or have recently turned) age 18. Because childhood SSI eligibility does not carry forward automatically, we are required to redetermine your continuing eligibility for SSI using the rules for adults.
+
+Enclosed is an Adult Function Report (Form SSA-3373). It must be completed and returned within 30 days of this notice.
+
+Based on the information in your file, we also need additional medical evidence to complete this review. You are scheduled for a consultative examination with:
+Dr. R. Alaniz, Psychological Associates of Central Florida
+2200 N. Orange Ave, Suite 140, Orlando, FL 32804
+Date: 07/28/2026    Time: 10:15 AM
+
+This examination is paid for by Social Security at no cost to you. Please bring a photo ID.
+
+This appointment is required. If you do not attend and do not contact us in advance, your case may be decided based on the evidence already in file, which could result in a finding that benefits should stop.
+
+If you cannot attend at this date or time, or need to arrange transportation or an accommodation, call us immediately at 1-800-772-1213.`,
+    es: `ADMINISTRACIÓN DEL SEGURO SOCIAL
+Servicios de Determinación de Discapacidad
+
+AVISO DE REDETERMINACIÓN DE DISCAPACIDAD A LOS 18 AÑOS
+
+Nuestros registros muestran que usted cumplirá (o ha cumplido recientemente) 18 años. Debido a que la elegibilidad de SSI infantil no continúa automáticamente, estamos obligados a redeterminar su elegibilidad continua para SSI usando las reglas para adultos.
+
+Se adjunta un Informe de Funcionamiento de Adulto (Formulario SSA-3373). Debe completarse y devolverse dentro de 30 días a partir de esta notificación.
+
+Según la información en su expediente, también necesitamos evidencia médica adicional para completar esta revisión. Tiene programado un examen consultivo con:
+Dr. R. Alaniz, Psychological Associates of Central Florida
+2200 N. Orange Ave, Suite 140, Orlando, FL 32804
+Fecha: 28/07/2026    Hora: 10:15 AM
+
+Este examen es pagado por el Seguro Social sin costo para usted. Por favor traiga una identificación con foto.
+
+Esta cita es obligatoria. Si no asiste y no se comunica con nosotros de antemano, su caso puede decidirse con base en la evidencia ya en el expediente, lo cual podría resultar en que los beneficios se detengan.
+
+Si no puede asistir en esta fecha u hora, o necesita organizar transporte o una adaptación, llámenos de inmediato al 1-800-772-1213.`
+  }
+};
+
+const CANNED_EXPLANATIONS = {
+  dcf: {
+    en: "This letter is from Florida's Medicaid office (DCF) -- not Social Security, not APD. It says Medicaid coverage will stop on 08/15/2026 unless something is sent in by 08/01/2026: either updated income information, or proof of a qualifying disability (medical records or a Social Security award letter both count).\n\nThe most important detail: if a hearing request goes in before 08/01/2026, coverage keeps going while the case is reviewed -- so acting before that date matters more than the exact paperwork being perfect. Missing the deadline stops coverage, but a hearing can still be requested up to 90 days after the end date.\n\nCall 1-866-762-2237 with questions.",
+    es: "Esta carta es de la oficina de Medicaid de Florida (DCF) -- no del Seguro Social, no de APD. Dice que la cobertura de Medicaid se detendrá el 15/08/2026 a menos que se envíe algo antes del 01/08/2026: información de ingresos actualizada, o prueba de una discapacidad calificada (registros médicos o una carta de adjudicación del Seguro Social cuentan).\n\nEl detalle más importante: si se presenta una solicitud de audiencia antes del 01/08/2026, la cobertura continúa mientras se revisa el caso -- así que actuar antes de esa fecha importa más que tener el papeleo perfecto. Perder la fecha límite detiene la cobertura, pero aún se puede solicitar una audiencia hasta 90 días después de la fecha final.\n\nLlame al 1-866-762-2237 con preguntas."
+  },
+  apd: {
+    en: "This is from APD, a different agency than the one that runs Medicaid. It's not about losing Medicaid directly -- it's about the iBudget waiver, which pays for extra services. APD wants updated proof of the disability (a new evaluation, or old school/testing records resent) within 45 days, because the file on hand is more than five years old.\n\nIf there's no current documentation available, APD is required to help arrange a free evaluation -- that's worth calling about right away rather than waiting, since 45 days can pass quickly.\n\nCall APD Central Region at (407) 245-0440.",
+    es: "Esto es de APD, una agencia diferente a la que administra Medicaid. No se trata de perder Medicaid directamente -- se trata de la exención iBudget, que paga por servicios adicionales. APD quiere prueba actualizada de la discapacidad (una nueva evaluación, o registros escolares/pruebas antiguas reenviados) dentro de 45 días, porque el archivo actual tiene más de cinco años.\n\nSi no hay documentación actual disponible, APD está obligada a ayudar a organizar una evaluación gratuita -- vale la pena llamar de inmediato en lugar de esperar, ya que 45 días pueden pasar rápido.\n\nLlame a APD Región Central al (407) 245-0440."
+  },
+  ssa: {
+    en: "This is Social Security's age-18 disability redetermination -- not a routine check, a brand-new adult disability claim. SSA doesn't have to show any decline in condition to end benefits; it just has to find the adult standard isn't met, which is why a little over half of childhood SSI recipients are initially found ineligible at this step nationally.\n\nTwo things matter most here: the enclosed Adult Function Report is due within 30 days and is often what decides the case -- answer for a bad day, not a good day, and be specific. And the exam on 07/28/2026 at 10:15 AM in Orlando is mandatory; missing it without calling ahead can end benefits even if the person still qualifies.\n\nAlso worth asking about: if a parent is on Social Security disability or retirement, or has passed away, Disabled Adult Child benefits may apply too, often paying more than SSI.\n\nCall 1-800-772-1213 with questions or to reschedule.",
+    es: "Esta es la redeterminación de discapacidad de los 18 años del Seguro Social -- no una revisión de rutina, sino una reclamación de discapacidad de adulto completamente nueva. SSA no tiene que demostrar ningún deterioro en la condición para terminar los beneficios; solo tiene que determinar que no se cumple el estándar de adulto, por eso poco más de la mitad de los beneficiarios de SSI infantil son inicialmente encontrados no elegibles en este paso a nivel nacional.\n\nDos cosas importan más aquí: el Informe de Funcionamiento de Adulto adjunto debe entregarse dentro de 30 días y a menudo es lo que decide el caso -- responda pensando en un mal día, no un buen día, y sea específico. Y el examen el 28/07/2026 a las 10:15 AM en Orlando es obligatorio; faltar sin llamar antes puede terminar los beneficios incluso si la persona todavía califica.\n\nTambién vale la pena preguntar: si uno de los padres recibe discapacidad o jubilación del Seguro Social, o ha fallecido, los beneficios de Hijo Adulto Discapacitado también pueden aplicar, y a menudo pagan más que SSI.\n\nLlame al 1-800-772-1213 con preguntas o para reprogramar."
+  }
+};
+
+function t(key){ return STRINGS[currentLang][key]; }
+
+function applyLanguage(){
+  document.getElementById('eyebrowText').textContent = t('eyebrow');
+  document.getElementById('pageLabelText').textContent = t('pageLabel');
+  document.getElementById('titleText').innerHTML = t('title');
+  document.getElementById('ledeText').textContent = t('lede');
+  document.getElementById('tabNavLabel').textContent = t('tabNav');
+  document.getElementById('tabTrLabel').textContent = t('tabTr');
+  document.getElementById('lblSample').textContent = t('lblSample');
+  document.getElementById('lblOriginal').textContent = t('lblOriginal');
+  document.getElementById('lblPlain').textContent = t('lblPlain');
+  document.getElementById('explainBtn').textContent = t('explainBtn');
+  document.getElementById('footnoteText').textContent = t('footnote');
+  document.getElementById('btnEN').classList.toggle('active', currentLang==='en');
+  document.getElementById('btnES').classList.toggle('active', currentLang==='es');
+
+  document.getElementById('orientCaption').textContent = t('orientCaption');
+  document.getElementById('orientTriggerDcf').textContent = t('orientDcf');
+  document.getElementById('orientTriggerApd').textContent = t('orientApd');
+  document.getElementById('orientTriggerSsa').textContent = t('orientSsa');
+  document.getElementById('linksTitle').textContent = t('linksTitle');
+  document.getElementById('sequenceBox').innerHTML = t('sequenceHtml');
+  renderLinks();
+
+  renderAgencyGrid();
+  if(selectedAgency) renderAgencyDetail(selectedAgency);
+  renderSampleOptions();
+  document.getElementById('noticeBox').value = SAMPLES[currentSampleKey][currentLang];
+  document.getElementById('plainOutput').innerHTML = '';
+  document.getElementById('trStatus').innerHTML = '';
+}
+
+function renderAgencyGrid(){
+  const grid = document.getElementById('agencyGrid');
+  grid.innerHTML = '';
+  Object.keys(AGENCY_INFO).forEach(key=>{
+    const info = AGENCY_INFO[key][currentLang];
+    const card = document.createElement('div');
+    card.className = 'agency-card' + (selectedAgency===key ? ' selected' : '');
+    card.innerHTML = `<div class="agency-name">${info.name}</div><div class="agency-sub">${info.sub}</div>`;
+    card.addEventListener('click', ()=>{ selectedAgency = key; renderAgencyGrid(); renderAgencyDetail(key); });
+    grid.appendChild(card);
+  });
+}
+
+function renderAgencyDetail(key){
+  const info = AGENCY_INFO[key][currentLang];
+  const detail = document.getElementById('agencyDetail');
+  detail.style.display = 'block';
+  const checklistHtml = info.checklist ? `
+      <div class="checklist-box">
+        <div class="checklist-title">${info.checklistTitle}</div>
+        <ul>${info.checklist.map(item => `<li>${item}</li>`).join('')}</ul>
+      </div>` : '';
+  detail.innerHTML = `
+    <div class="detail">
+      <h3>${info.name}</h3>
+      <p>${info.body.replace(/\n\n/g,'</p><p>')}</p>
+      <div class="contact-row">${info.contact}</div>
+      ${checklistHtml}
+      <div style="margin-top:16px;">
+        <button class="ghost" id="jumpToTranslator">${t('seeInTranslator')}</button>
+      </div>
+    </div>`;
+  document.getElementById('jumpToTranslator').addEventListener('click', ()=>{
+    currentSampleKey = key;
+    document.querySelector('.tab[data-tab="tr"]').click();
+    document.getElementById('sampleSelect').value = key;
+    document.getElementById('noticeBox').value = SAMPLES[key][currentLang];
+  });
+}
+
+function renderLinks(){
+  const grid = document.getElementById('linksGrid');
+  grid.innerHTML = '';
+  Object.keys(LINKS).forEach(key=>{
+    const info = AGENCY_INFO[key][currentLang];
+    const col = document.createElement('div');
+    col.className = 'links-col';
+    const items = LINKS[key].map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l[currentLang]}</a>`).join('');
+    col.innerHTML = `<h4>${info.name}</h4>${items}`;
+    grid.appendChild(col);
+  });
+}
+
+function renderSampleOptions(){
+  const sel = document.getElementById('sampleSelect');
+  const labels = {
+    dcf: currentLang==='en' ? 'DCF -- Medicaid renewal notice' : 'DCF -- Aviso de renovación de Medicaid',
+    apd: currentLang==='en' ? 'APD -- iBudget documentation request' : 'APD -- Solicitud de documentación iBudget',
+    ssa: currentLang==='en' ? 'SSA -- Consultative exam notice' : 'SSA -- Aviso de examen consultivo'
+  };
+  sel.innerHTML = '';
+  Object.keys(labels).forEach(key=>{
+    const opt = document.createElement('option');
+    opt.value = key; opt.textContent = labels[key];
+    if(key===currentSampleKey) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+document.getElementById('btnEN').addEventListener('click', ()=>{ currentLang='en'; applyLanguage(); });
+document.getElementById('btnES').addEventListener('click', ()=>{ currentLang='es'; applyLanguage(); });
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('sampleSelect').addEventListener('change', (e)=>{
+  currentSampleKey = e.target.value;
+  document.getElementById('noticeBox').value = SAMPLES[currentSampleKey][currentLang];
+  document.getElementById('plainOutput').innerHTML = '';
+});
+
+async function callClaude(promptText){
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: promptText }]
+    })
+  });
+  const data = await res.json();
+  return (data.content || []).map(b => b.text || "").join("\n");
+}
+
+document.getElementById('explainBtn').addEventListener('click', async ()=>{
+  const notice = document.getElementById('noticeBox').value.trim();
+  const statusEl = document.getElementById('trStatus');
+  const outputEl = document.getElementById('plainOutput');
+  if(!notice){ statusEl.innerHTML = `<span class="error">${t('noResult')}</span>`; return; }
+
+  document.getElementById('explainBtn').disabled = true;
+  statusEl.innerHTML = `<span class="loading">${t('explaining')}</span>`;
+  outputEl.innerHTML = '';
+
+  const langInstruction = currentLang==='es' ? 'Respond entirely in Spanish.' : 'Respond entirely in English.';
+  const prompt = `You are explaining a government benefits-related notice in plain, calm, non-alarming language to a family caregiver who may not know which agency sent it or what's really required. ${langInstruction}
+
+Explain: what this notice actually is, what specifically needs to happen and by when, what happens if it's ignored, and any especially important detail (like a right to appeal, or a right to bring a representative). Keep it under 180 words. Do not use legal jargon.
+
+Notice:
+"""${notice}"""`;
+
+  let text, usedCanned = false;
+  try {
+    text = (await callClaude(prompt)).trim();
+    if(!text) throw new Error('empty');
+  } catch(e){
+    if(CANNED_EXPLANATIONS[currentSampleKey]){
+      text = CANNED_EXPLANATIONS[currentSampleKey][currentLang];
+      usedCanned = true;
+    } else {
+      statusEl.innerHTML = `<span class="error">${t('unreachable')}</span>`;
+      document.getElementById('explainBtn').disabled = false;
+      return;
+    }
+  }
+  statusEl.innerHTML = usedCanned ? `<span class="loading">${t('unreachable')}</span>` : '';
+  outputEl.innerHTML = escapeHtml(text) + (usedCanned ? `<div class="loading" style="margin-top:10px;">${t('savedNote')}</div>` : '');
+  document.getElementById('explainBtn').disabled = false;
+});
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])).replace(/\n/g,'<br>');
+}
+
+// init — pick up a routed agency/language from the homepage check-in, if present
+(function applyIncomingParams(){
+  const params = new URLSearchParams(window.location.search);
+  const agency = params.get('agency');
+  if(agency && AGENCY_INFO[agency]) selectedAgency = agency;
+  if(params.get('lang') === 'es') currentLang = 'es';
+})();
+applyLanguage();
+if(selectedAgency){
+  document.getElementById('agencyDetail').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Medicaid & Disability Benefits Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --paper-raised:#F5F8FA;
+    --ink:#1C2733;
+    --ink-soft:#5B6B78;
+    --brand:#1B3A5C;
+    --brand-dim:#DCE6EE;
+    --teal:#3E7C82;
+    --flag:#A6570F;
+    --flag-dim:#F3E4D2;
+    --ok:#3F7A56;
+    --ok-dim:#E1EBE4;
+    --hair:#D7DEE2;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Public Sans',sans-serif;font-size:16px;line-height:1.6;}
+  .wrap{max-width:820px;margin:0 auto;padding:0 24px 90px;}
+
+  .topbar-outer{background:var(--brand);padding:16px 24px;margin-bottom:0;}
+  .topbar-inner{max-width:820px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+  .eyebrow{font-family:'Public Sans',sans-serif;font-weight:700;font-size:15px;color:#fff;}
+  .langtoggle{display:flex;border:1px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden;}
+  .langtoggle button{background:none;border:none;padding:6px 15px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.05em;cursor:pointer;color:rgba(255,255,255,.8);}
+  .langtoggle button.active{background:#fff;color:var(--brand);}
+
+  .hero{padding:64px 0 8px;text-align:center;}
+  .pagelabel{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;}
+  h1{font-family:'Public Sans',sans-serif;font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1.2;margin:0 0 20px;color:var(--brand);max-width:23ch;margin-left:auto;margin-right:auto;}
+  .lede{font-size:16.5px;color:var(--ink-soft);max-width:56ch;margin:0 auto 12px;}
+
+  .checkin-card{background:var(--paper-raised);border:1px solid var(--hair);border-radius:14px;padding:30px 30px 26px;margin:0 0 44px;text-align:left;}
+  .checkin-title{font-family:'Public Sans',sans-serif;font-weight:700;font-size:15.5px;color:var(--brand);margin:0 0 22px;}
+  .checkin-q{margin-bottom:20px;}
+  .checkin-q:last-child{margin-bottom:0;}
+  .checkin-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{
+    font-family:'Public Sans',sans-serif;font-size:13.5px;padding:8px 16px;border-radius:999px;
+    border:1px solid var(--hair);background:#fff;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s;
+  }
+  .pill:hover{border-color:var(--teal);}
+  .pill.selected{background:var(--brand);border-color:var(--brand);color:#fff;}
+
+  .stat-block{background:var(--paper-raised);border:1px solid var(--hair);border-radius:14px;padding:40px 30px;margin:44px 0 32px;text-align:center;}
+  .stat-number{font-family:'Public Sans',sans-serif;font-weight:800;font-size:clamp(48px,9vw,72px);color:var(--flag);line-height:1;margin-bottom:10px;}
+  .stat-caption{font-size:15.5px;color:var(--ink);max-width:44ch;margin:0 auto;}
+  .stat-source{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);margin-top:14px;}
+
+  .explain{font-size:15.5px;color:var(--ink);max-width:60ch;margin:0 auto 44px;}
+  .explain p{margin:0 0 16px;}
+  .explain b{color:var(--brand);}
+
+  .cta-wrap{text-align:center;margin:8px 0 20px;}
+  .cta-button{
+    display:inline-block;background:var(--brand);color:#fff;text-decoration:none;
+    font-family:'Public Sans',sans-serif;font-weight:700;font-size:17px;
+    padding:18px 40px;border-radius:10px;transition:background .15s;
+  }
+  .cta-button:hover{background:#152f4a;}
+  .cta-sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-top:12px;}
+
+  .footnote{font-size:12.5px;color:var(--ink-soft);border-top:1px solid var(--hair);padding-top:16px;margin-top:56px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topbar-outer">
+  <div class="topbar-inner">
+    <div class="eyebrow" id="eyebrowText">Florida Medicaid & Disability Benefits Guide</div>
+    <div class="langtoggle">
+      <button id="btnEN" class="active">EN</button>
+      <button id="btnES">ES</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <p class="pagelabel" id="pageLabelText">Before you start</p>
+    <h1 id="titleText">How to Navigate Florida's Disability Benefits System</h1>
+    <p class="lede" id="ledeText">Florida disability benefits run through DCF, APD, and Social Security — three agencies that rarely coordinate with each other. Most families find this out the hard way: after a letter arrives that doesn't explain what's actually happening.</p>
+  </div>
+
+  <div class="stat-block">
+    <div class="stat-number" id="statNumber">1.4M+</div>
+    <p class="stat-caption" id="statCaption">people are denied Social Security disability benefits at initial application, every year — most for paperwork and evidence reasons that are fixable if you know what's being asked.</p>
+    <p class="stat-source" id="statSource">Source: SSA FY2025 disability workload data</p>
+  </div>
+
+  <div class="checkin-card" id="checkinCard">
+    <p class="checkin-title" id="checkinTitle">Quick check-in — this just points the button below to the right place</p>
+    <div class="checkin-q">
+      <div class="checkin-label" id="q1Label">Have you received a letter yet?</div>
+      <div class="pill-row" id="q1Options"></div>
+    </div>
+    <div class="checkin-q" id="q2Wrap" style="display:none;">
+      <div class="checkin-label" id="q2Label">Who's it from?</div>
+      <div class="pill-row" id="q2Options"></div>
+    </div>
+    <div class="checkin-q">
+      <div class="checkin-label" id="q3Label">Is this for someone about to turn 18, or already an adult?</div>
+      <div class="pill-row" id="q3Options"></div>
+    </div>
+  </div>
+
+  <div class="explain" id="explainText">
+    <p><b>This isn't a sign anything was done wrong.</b> Initial decisions are often made from incomplete records, without anyone hearing directly from the applicant or their family. That's exactly where this guide is meant to help — before a letter turns into a missed deadline.</p>
+    <p>Inside: a plain-language explanation of whichever notice you've received, which of the three agencies actually sent it, and — for the hardest step, Social Security's review — exactly what the form is really asking and how to answer it.</p>
+  </div>
+
+  <div class="cta-wrap">
+    <a href="coverage_tool.html" class="cta-button" id="ctaButton">See what your letter means →</a>
+    <p class="cta-sub" id="ctaSub">Takes about two minutes. No account, no data saved.</p>
+  </div>
+
+  <p class="footnote" id="footnoteText">Prototype — for demonstration purposes. Not affiliated with DCF, APD, or the Social Security Administration.</p>
+</div>
+
+<script>
+let currentLang = 'en';
+
+const STRINGS = {
+  en: {
+    eyebrow: "Florida Medicaid & Disability Benefits Guide",
+    pageLabel: "Before you start",
+    title: "How to Navigate Florida's Disability Benefits System",
+    lede: "Florida disability benefits run through DCF, APD, and Social Security — three agencies that rarely coordinate with each other. Most families find this out the hard way: after a letter arrives that doesn't explain what's actually happening.",
+    statNumber: "1.4M+",
+    statCaption: "people are denied Social Security disability benefits at initial application, every year — most for paperwork and evidence reasons that are fixable if you know what's being asked.",
+    statSource: "Source: SSA FY2025 disability workload data",
+    explain1: "<b>This isn't a sign anything was done wrong.</b> Initial decisions are often made from incomplete records, without anyone hearing directly from the applicant or their family. That's exactly where this guide is meant to help — before a letter turns into a missed deadline.",
+    explain2: "Inside: a plain-language explanation of whichever notice you've received, which of the three agencies actually sent it, and — for the hardest step, Social Security's review — exactly what the form is really asking and how to answer it.",
+    cta: "See what your letter means →",
+    ctaSub: "Takes about two minutes. No account, no data saved.",
+    footnote: "Prototype — for demonstration purposes. Not affiliated with DCF, APD, or the Social Security Administration.",
+    checkinTitle: "Quick check-in — this just points the button below to the right place",
+    q1Label: "Have you received a letter yet?",
+    q2Label: "Who's it from?",
+    q3Label: "Is this for someone about to turn 18, or already an adult?"
+  },
+  es: {
+    eyebrow: "Guía de Medicaid y Beneficios por Discapacidad de Florida",
+    pageLabel: "Antes de empezar",
+    title: "Cómo Navegar el Sistema de Beneficios por Discapacidad de Florida",
+    lede: "Los beneficios por discapacidad en Florida pasan por DCF, APD, y el Seguro Social — tres agencias que casi nunca se coordinan entre sí. La mayoría de las familias lo descubren de la peor manera: cuando llega una carta que no explica qué está pasando realmente.",
+    statNumber: "1.4M+",
+    statCaption: "personas son rechazadas para beneficios por discapacidad del Seguro Social en la solicitud inicial, cada año — la mayoría por razones de papeleo y evidencia que se pueden corregir si sabe qué se está pidiendo.",
+    statSource: "Fuente: datos de carga de trabajo de discapacidad de SSA, año fiscal 2025",
+    explain1: "<b>Esto no es una señal de que algo se hizo mal.</b> Las decisiones iniciales a menudo se toman con expedientes incompletos, sin que nadie escuche directamente al solicitante o su familia. Para eso está exactamente esta guía — antes de que una carta se convierta en una fecha límite perdida.",
+    explain2: "Adentro: una explicación en lenguaje sencillo de la carta que haya recibido, cuál de las tres agencias realmente la envió, y — para el paso más difícil, la revisión del Seguro Social — exactamente qué está pidiendo el formulario y cómo responderlo.",
+    cta: "Vea qué significa su carta →",
+    ctaSub: "Toma unos dos minutos. Sin cuenta, sin datos guardados.",
+    footnote: "Prototipo — con fines de demostración. No afiliado con DCF, APD, ni la Administración del Seguro Social.",
+    checkinTitle: "Un par de preguntas — solo para llevarlo al botón correcto abajo",
+    q1Label: "¿Ya recibió una carta?",
+    q2Label: "¿De quién es?",
+    q3Label: "¿Esto es para alguien que está por cumplir 18 años, o ya es adulto?"
+  }
+};
+
+const CHECKIN = {
+  hasLetter: [
+    { value:'yes', en:'Yes', es:'Sí' },
+    { value:'no', en:'No', es:'No' },
+    { value:'unsure', en:'Not sure', es:'No estoy seguro/a' }
+  ],
+  agency: [
+    { value:'dcf', en:'DCF', es:'DCF' },
+    { value:'apd', en:'APD', es:'APD' },
+    { value:'ssa', en:'Social Security', es:'Seguro Social' },
+    { value:'unsure', en:'Not sure', es:'No estoy seguro/a' }
+  ],
+  stage: [
+    { value:'minor', en:'About to turn 18', es:'Está por cumplir 18 años' },
+    { value:'adult', en:'Already 18+', es:'Ya tiene 18+' },
+    { value:'na', en:'Not applicable', es:'No aplica' }
+  ]
+};
+
+// Answers live only in memory for this page view — nothing is stored or sent anywhere.
+let checkinAnswers = { hasLetter:null, agency:null, stage:null };
+
+function renderPillRow(containerId, options, answerKey){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  options.forEach(opt=>{
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pill' + (checkinAnswers[answerKey] === opt.value ? ' selected' : '');
+    btn.textContent = opt[currentLang];
+    btn.addEventListener('click', ()=>{
+      checkinAnswers[answerKey] = (checkinAnswers[answerKey] === opt.value) ? null : opt.value;
+      if(answerKey === 'hasLetter' && checkinAnswers.hasLetter !== 'yes'){ checkinAnswers.agency = null; }
+      renderCheckin();
+    });
+    el.appendChild(btn);
+  });
+}
+
+function renderCheckin(){
+  document.getElementById('checkinTitle').textContent = t('checkinTitle');
+  document.getElementById('q1Label').textContent = t('q1Label');
+  document.getElementById('q2Label').textContent = t('q2Label');
+  document.getElementById('q3Label').textContent = t('q3Label');
+  renderPillRow('q1Options', CHECKIN.hasLetter, 'hasLetter');
+  renderPillRow('q2Options', CHECKIN.agency, 'agency');
+  renderPillRow('q3Options', CHECKIN.stage, 'stage');
+  document.getElementById('q2Wrap').style.display = (checkinAnswers.hasLetter === 'yes') ? 'block' : 'none';
+  updateCtaHref();
+}
+
+function updateCtaHref(){
+  const params = new URLSearchParams();
+  let agency = (checkinAnswers.agency && checkinAnswers.agency !== 'unsure') ? checkinAnswers.agency : null;
+  if(!agency && checkinAnswers.stage === 'minor'){ agency = 'ssa'; }
+  if(agency) params.set('agency', agency);
+  if(currentLang === 'es') params.set('lang', 'es');
+  const qs = params.toString();
+  document.getElementById('ctaButton').setAttribute('href', 'coverage_tool.html' + (qs ? ('?' + qs) : ''));
+}
+
+function t(key){ return STRINGS[currentLang][key]; }
+
+function applyLanguage(){
+  document.getElementById('eyebrowText').textContent = t('eyebrow');
+  document.getElementById('pageLabelText').textContent = t('pageLabel');
+  document.getElementById('titleText').textContent = t('title');
+  document.getElementById('ledeText').textContent = t('lede');
+  document.getElementById('statNumber').textContent = t('statNumber');
+  document.getElementById('statCaption').textContent = t('statCaption');
+  document.getElementById('statSource').textContent = t('statSource');
+  document.getElementById('explainText').innerHTML = `<p>${t('explain1')}</p><p>${t('explain2')}</p>`;
+  document.getElementById('ctaButton').textContent = t('cta');
+  document.getElementById('ctaSub').textContent = t('ctaSub');
+  document.getElementById('footnoteText').textContent = t('footnote');
+  document.getElementById('btnEN').classList.toggle('active', currentLang==='en');
+  document.getElementById('btnES').classList.toggle('active', currentLang==='es');
+  renderCheckin();
+}
+
+document.getElementById('btnEN').addEventListener('click', ()=>{ currentLang='en'; applyLanguage(); });
+document.getElementById('btnES').addEventListener('click', ()=>{ currentLang='es'; applyLanguage(); });
+
+applyLanguage();
+</script>
+</body>
+</html>
