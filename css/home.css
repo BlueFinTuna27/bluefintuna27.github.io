@@ -94,7 +94,8 @@
 .hero__uga-mark {
   width: min(100%, 130px);
 }
-.hero__uga-mark svg {
+.hero__uga-mark svg,
+.hero__uga-mark img {
   width: 100%;
   height: auto;
   color: var(--color-ink-faint);
@@ -139,5 +140,4 @@
   .hero__sheet { grid-template-columns: 1fr; }
   .hero__text { border-right: none; border-bottom: var(--hairline) solid var(--color-line-strong); }
   .nav-through__grid { grid-template-columns: 1fr; }
-  .nav-through__cell--wide { grid-column: 1; }
-}
+  .nav-through__cell--wide {
