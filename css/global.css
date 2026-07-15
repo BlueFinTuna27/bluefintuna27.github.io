@@ -81,13 +81,18 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
    that need to bleed past the stamp edge onto the turquoise background —
    they can't live inside .stamp-container itself, since its mask/filter
    clips its whole rendered subtree at the container's own box. */
-.stamp-frame { position: relative; }
+.stamp-frame {
+  position: relative;
+  width: calc(100% - 96px); /* ~0.5in gutter to the viewport edge on each side */
+  max-width: 1600px;
+  margin: 1.25rem auto;
+}
 .postmark {
   position: absolute;
-  top: -34px;
-  right: 44px;
-  width: 130px;
-  height: 130px;
+  top: 16px;
+  right: 16px;
+  width: 110px;
+  height: 110px;
   color: var(--accent-red);
   opacity: 0.55;
   transform: rotate(-9deg);
@@ -97,7 +102,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .postmark svg { width: 100%; height: 100%; display: block; }
 
 @media (max-width: 700px) {
-  .postmark { width: 88px; height: 88px; top: -18px; right: 14px; }
+  .stamp-frame { width: calc(100% - 32px); }
+  .postmark { width: 72px; height: 72px; top: 10px; right: 10px; }
 }
 
 /* ---------- Stamp container ---------- */
@@ -105,15 +111,19 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
    circular notches punched along all four sides. Built from a base fill mask
    XORed with four repeating-circle masks, one per edge, each tiled along its
    own edge only (repeat-x pinned top/bottom, repeat-y pinned left/right) —
-   a single gradient anchored at one corner can't reach all four sides. */
+   a single gradient anchored at one corner can't reach all four sides. Each
+   tile is shifted by half a pitch (--notch-half) so a notch's *center* lands
+   exactly on the container's edge — a half-circle bite out of the paper —
+   rather than sitting a full radius inboard with a sliver of intact paper
+   still showing past it. */
 .stamp-container {
   --notch-r: 7px;
   --notch-pitch: 18px;
+  --notch-half: calc(var(--notch-pitch) / -2);
 
   background-color: var(--color-paper);
-  padding: 4rem;
-  margin: 2rem auto;
-  max-width: 1200px;
+  padding: 3rem 3.5rem;
+  width: 100%;
 
   /* Chromium's unprefixed mask-composite (luminance-mode "add"/"exclude")
      doesn't punch the notches correctly in testing — the -webkit- alpha-based
@@ -127,7 +137,12 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
     repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch)),
     repeating-radial-gradient(circle at center, #000 0 var(--notch-r), transparent var(--notch-r) var(--notch-pitch));
   -webkit-mask-repeat: no-repeat, repeat-x, repeat-x, repeat-y, repeat-y;
-  -webkit-mask-position: center, top center, bottom center, center left, center right;
+  -webkit-mask-position:
+    center,
+    left 0px top var(--notch-half),
+    left 0px bottom var(--notch-half),
+    left var(--notch-half) top 0px,
+    right var(--notch-half) top 0px;
   -webkit-mask-size:
     100% 100%,
     var(--notch-pitch) var(--notch-pitch),
@@ -141,7 +156,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 @media (max-width: 700px) {
-  .stamp-container { padding: 2rem 1.25rem; }
+  .stamp-container { padding: 1.75rem 1.25rem; }
 }
 
 /* ---------- Layout ---------- */
@@ -434,21 +449,4 @@ button.tag[aria-pressed="true"] {
   margin-bottom: var(--space-1);
 }
 
-/* Catalog-style roman-numeral index mark — the recurring device across the reference sites.
-   Stronger emboss than a link or a label: it should look stamped into the paper. */
-.index-mark {
-  display: block;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: var(--size-small);
-  letter-spacing: 0.04em;
-  color: var(--accent-red);
-  text-shadow: -0.5px -0.5px 0 var(--emboss-light), 0.5px 0.5px 1px var(--emboss-dark);
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
+/* Catalog-sty

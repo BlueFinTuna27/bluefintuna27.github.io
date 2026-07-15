@@ -1,5 +1,5 @@
 .hero {
-  padding-block: clamp(2.5rem, 6vw, var(--space-8)) var(--space-6);
+  padding-block: clamp(2rem, 5vw, var(--space-7)) var(--space-5);
 }
 
 /* The hero used to be big type floating over an empty page next to one lonely
@@ -106,6 +106,9 @@
 
 /* Nav-through — an asymmetric, edge-to-edge grid of bordered cells sharing
    hairlines (a specimen board), not three even cards floating in a wide gap. */
+.nav-through {
+  padding-block: var(--space-4);
+}
 .nav-through__grid {
   list-style: none;
   padding: 0;
@@ -139,5 +142,4 @@
 @media (max-width: 800px) {
   .hero__sheet { grid-template-columns: 1fr; }
   .hero__text { border-right: none; border-bottom: var(--hairline) solid var(--color-line-strong); }
-  .nav-through__grid { grid-template-columns: 1fr; }
-  .nav-through__cell--wide {
+  .nav-through__grid { grid-templ

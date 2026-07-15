@@ -60,7 +60,7 @@
 
   /* --- Layout --- */
   --content-width: 46rem;
-  --page-width: 72rem;
+  --page-width: 84rem;
   --page-pad: clamp(1.25rem, 4vw, 3rem);
 
   /* --- Motion (kept short and purposeful, honors reduced-motion) ---
